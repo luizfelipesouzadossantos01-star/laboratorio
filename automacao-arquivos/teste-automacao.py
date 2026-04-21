@@ -1,19 +1,21 @@
 from pathlib import Path
 
-#Altere estas variáveis com o nome da pasta de origem e onde deseja colocar.
-pasta_raiz="automacao-arquivos"
-nome_destino="teste"
-
-raiz=Path.cwd() / pasta_raiz
-caminho_destino=Path.cwd() / pasta_raiz /nome_destino
-
-#Garantir que a pasta exista
-caminho_destino.mkdir(exist_ok=True)
+#Configuração inicial
+mapeamento_arquivos={
+    "calculo":"Exatas/Calculo",
+    "arquitetura":"TI/Programação"
+}
+pasta_raiz=Path.cwd() / "automacao-arquivos"
 
 # O .glob() varre a pasta e captura apenas os arquivos com a extensão que especificamos.
-for caminhopdf in raiz.glob("*.pdf"):
-    if "calculo" in caminhopdf.name.lower():
-        #O método .rename serve tanto para renomear o arquivo quanto para movê-lo de diretório.
-        caminhopdf.rename(caminho_destino / caminhopdf.name)
-        #O .name ignora o caminho completo e extrai apenas o nome final do arquivo (ex: calculo.pdf).
-        print(f"Sucesso o arquivo {caminhopdf.name} foi movido para {caminho_destino}.")
+for caminhopdf in pasta_raiz.glob("*.pdf"):
+    arquivo=caminhopdf.name.lower()
+    #Varre o dicionario e compara a palavra chave e o arquivo
+    for palavra_chave,subpasta in mapeamento_arquivos.items():
+        if palavra_chave in arquivo:
+            caminho_destino=pasta_raiz / subpasta
+            #Garantir que o diretorio e parents exista
+            caminho_destino.mkdir(parents=True,exist_ok=True)
+            caminhopdf.rename(caminho_destino / caminhopdf.name)
+            print(f"Sucesso: {caminhopdf.name} organizado.")
+            break
