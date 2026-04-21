@@ -1,16 +1,19 @@
 from pathlib import Path
 
-#Altere estas variáveis com o nome do arquivo inicial e da pasta de origem.
-arquivo="calculo.pdf"
+#Altere estas variáveis com o nome da pasta de origem e onde deseja colocar.
 pasta_raiz="automacao-arquivos"
+nome_destino="teste"
 
-#Pasta que deseja colocar os arquivos
-pasta_destinada="teste"
+raiz=Path.cwd() / pasta_raiz
+caminho_destino=Path.cwd() / pasta_raiz /nome_destino
 
-arquivo_caminho= Path.cwd() / pasta_raiz / arquivo
-pasta_destinada=Path.cwd() / pasta_raiz /pasta_destinada
+#Garantir que a pasta exista
+caminho_destino.mkdir(exist_ok=True)
 
-arquivo_caminho.rename(pasta_destinada / arquivo_caminho.name)
-
-#O método .rename serve tanto para renomear o arquivo quanto para movê-lo de diretório.
-#O .name ignora o caminho completo e extrai apenas o nome final do arquivo (ex: calculo.pdf).
+# O .glob() varre a pasta e captura apenas os arquivos com a extensão que especificamos.
+for caminhopdf in raiz.glob("*.pdf"):
+    if "calculo" in caminhopdf.name.lower():
+        #O método .rename serve tanto para renomear o arquivo quanto para movê-lo de diretório.
+        caminhopdf.rename(caminho_destino / caminhopdf.name)
+        #O .name ignora o caminho completo e extrai apenas o nome final do arquivo (ex: calculo.pdf).
+        print(f"Sucesso o arquivo {caminhopdf.name} foi movido para {caminho_destino}.")
